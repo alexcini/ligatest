@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8" />
+        <title>Google Maps API v3: Criando um mapa personalizado</title>
+        <link rel="stylesheet" type="text/css" href="css/estilo.css">
+    </head>
+ 
+    <body>
+       <div id="mapa" style="height: 500px; width: 700px">
+        </div>
+		
+		<script src="js/jquery.min.js"></script>
+ 
+        <!-- Maps API Javascript -->
+        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        
+        <!-- Caixa de informação -->
+        <script src="js/infobox.js"></script>
+		
+        <!-- Agrupamento dos marcadores -->
+		<script src="js/markerclusterer.js"></script>
+ 
+        <!-- Arquivo de inicialização do mapa 
+		<script src="js/mapa.js"></script>
+        -->
+
+        <script type="text/javascript">
+            function showAndroidToast(toast) {
+                Android.showToast(toast);
+            }
+
+            var map;
+            var idInfoBoxAberto;
+            var infoBox = [];
+            var markers = [];
+
+            function initialize() { 
+                var latlng = new google.maps.LatLng(-23.6456928,-46.6054247);
+                
+                var options = {
+                    zoom: 5,
+                    center: latlng,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+
+                map = new google.maps.Map(document.getElementById("mapa"), options);
+            }
+
+            initialize();
+
+            function abrirInfoBox(id, marker) {
+                if (typeof(idInfoBoxAberto) == 'number' && typeof(infoBox[idInfoBoxAberto]) == 'object') {
+                    infoBox[idInfoBoxAberto].close();
+                }
+
+                infoBox[id].open(map, marker);
+                idInfoBoxAberto = id;
+            }
+
+            function showMsg(toast) {
+                Android.showToast(toast);
+            }
+
+            function carregarPontosDoServico(json) {
+
+                    var latlngbounds = new google.maps.LatLngBounds();
+
+                    $.each(json, function(index, ponto) {
+
+                        var marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(ponto.latitude, ponto.longitude),
+                            title: ponto.locationDescription,
+                            icon: 'img/marcador.png'
+                        });
+
+                        var myOptions = {
+                            content: "<p>" + ponto.type.humanDescription + "</p>"
+                            + "<p>" + ponto.locationDescription + "</p>",
+                            pixelOffset: new google.maps.Size(-150, 0)
+                        };
+                        infoBox[ponto.identifier] = new InfoBox(myOptions);
+                        infoBox[ponto.identifier].marker = marker;
+                        infoBox[ponto.identifier].listener = google.maps.event.addListener(marker, 'click', function (e) {
+                            abrirInfoBox(ponto.identifier, marker);
+                        });
+                        markers.push(marker);
+                        latlngbounds.extend(marker.position);
+
+                    });
+                    var markerCluster = new MarkerClusterer(map, markers);
+                    map.fitBounds(latlngbounds);
+            }
+        </script>
+
+
+    </body>
+</html>

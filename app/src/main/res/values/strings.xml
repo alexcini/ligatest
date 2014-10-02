@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LigaTest</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_google_maps">GoogleMapsActivity</string>
+    <string name="my_location">Minha localização</string>
+    <string name="title_activity_detail_google_maps">DetailGoogleMapsActivity</string>
+    <string name="detail_occurrence">Detalhe da Ocorrência</string>
+
+    <string name="label_address">Endereço</string>
+    <string name="label_user">Usuário</string>
+    <string name="label_type">Tipo do Report</string>
+
+
+
+</resources>
